@@ -1,0 +1,16 @@
+<section>
+  <h1 class="text-center">Favorite books</h1>
+  <ng-container *ngIf="!showNewBookForm;else newAddForm">
+    <div class="row">
+      <div class="col-12">
+        <button mat-raised-button color="primary" (click)="onShowAddFormHandler(true)">
+          <fa-icon [icon]="plusIcon" size="1x" class="me-2"></fa-icon>
+          New book
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #newAddForm>
+    <app-new-favorite-book (hideFormEvent)="onShowAddFormHandler($event)"></app-new-favorite-book>
+  </ng-template>
+</section>

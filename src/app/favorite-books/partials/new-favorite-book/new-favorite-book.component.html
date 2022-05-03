@@ -1,0 +1,33 @@
+<div class="row mt-4">
+  <div class="col-md-6 col-12">
+    <form [formGroup]="addBookForm" (ngSubmit)="onSubmitHandler()">
+      <h4 class="mb-0">Name: </h4>
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput formControlName="name" placeholder="ex. Dune">
+        <mat-error>
+          <span *ngIf="addBookForm.controls['name'].errors?.['required']">Name is required</span>
+          <span *ngIf="addBookForm.controls['name'].errors?.['bookNameExists']">Book name exists</span>
+        </mat-error>
+      </mat-form-field>
+      <h4 class="mb-0">Author name:</h4>
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput formControlName="author" placeholder="ex. Frank herbert">
+        <mat-error>
+          Author name is required
+        </mat-error>
+      </mat-form-field>
+      <h4 class="mb-0">Year:</h4>
+      <mat-form-field appearance="outline" class="w-50">
+        <input matInput formControlName="year" type="number" placeholder="ex. 1932">
+        <mat-error>
+          <span *ngIf="addBookForm.controls['year'].errors?.['required']">Publish Year is required</span>
+          <span *ngIf="addBookForm.controls['year'].errors?.['pattern']">Publish year must be valid number</span>
+        </mat-error>
+      </mat-form-field>
+      <div class="d-flex mt-2">
+        <button mat-raised-button type="submit" color="primary" class="me-4">Add book</button>
+        <button mat-button color="primary" (click)="onCancelHandler($event)">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
