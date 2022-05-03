@@ -1,6 +1,6 @@
 <section>
   <h1 class="text-center">Favorite books</h1>
-  <ng-container *ngIf="!showNewBookForm;else newAddForm">
+  <ng-container *ngIf="!showNewBookForm;else newFavoriteBook">
     <div class="row">
       <div class="col-12">
         <button mat-raised-button color="primary" (click)="onShowAddFormHandler(true)">
@@ -10,7 +10,8 @@
       </div>
     </div>
   </ng-container>
-  <ng-template #newAddForm>
+  <ng-template #newFavoriteBook>
     <app-new-favorite-book (hideFormEvent)="onShowAddFormHandler($event)"></app-new-favorite-book>
   </ng-template>
+  <app-favorite-books-table></app-favorite-books-table>
 </section>
