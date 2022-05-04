@@ -1,0 +1,23 @@
+.books-table {
+  cursor: pointer;
+  .mat-column-order {
+    flex: 0 0 10%;
+    width: 10%;
+  }
+  .mat-column-bookTitle {
+    flex: 0 0 25%;
+    width: 25%;
+  }
+  .mat-column-authorName {
+    flex: 0 0 25%;
+    width: 25%;
+  }
+  .mat-column-year {
+    flex: 0 0 25%;
+    width: 25%;
+  }
+  .mat-column-action {
+    flex: 0 0 15%;
+    width: 15%;
+  }
+}

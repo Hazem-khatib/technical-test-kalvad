@@ -11,7 +11,7 @@ import { Book } from '../../modals/book';
 export class NewFavoriteBookComponent {
   @Output() hideFormEvent = new EventEmitter<boolean>();
   addBookForm = this.formBuilder.group({
-    name: [null, [Validators.required, this.validateBookName()]],
+    title: [null, [Validators.required, this.validateBookName()]],
     author: [null, Validators.required],
     year: [1932, [Validators.required, Validators.pattern('^[0-9]{4,4}$')]],
   });
@@ -28,6 +28,7 @@ export class NewFavoriteBookComponent {
     this.localStorageService.set('favoriteBooks', [
       ...(storageBooks ?? []),
       {
+        // add unique id for GRUD operations
         id: uuid(),
         ...this.addBookForm.value,
       },
@@ -48,10 +49,10 @@ export class NewFavoriteBookComponent {
       if (control.value && storageBooks) {
         const index = storageBooks.findIndex(
           (book) =>
-            book.name.toLocaleLowerCase().trim() ===
+            book.title.toLocaleLowerCase().trim() ===
             control.value.toString().toLocaleLowerCase().trim()
         );
-        if (index >= 0) return { bookNameExists: true };
+        if (index >= 0) return { bookTitleExists: true };
       }
       return null;
     };

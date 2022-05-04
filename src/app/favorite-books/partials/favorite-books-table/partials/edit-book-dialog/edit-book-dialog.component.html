@@ -1,12 +1,11 @@
 <ng-container *ngIf="editBookForm">
-  <h2 mat-dialog-title>Edit {{data.name}}</h2>
+  <h2 mat-dialog-title>Edit {{data.title}}</h2>
   <mat-dialog-content [formGroup]="editBookForm">
     <h4 class="mb-0">Name: </h4>
     <mat-form-field appearance="outline" class="w-100">
-      <input matInput formControlName="name" placeholder="ex. Dune">
+      <input matInput formControlName="title" placeholder="ex. Dune">
       <mat-error>
-        <span *ngIf="editBookForm.controls['name'].errors?.['required']">Name is required</span>
-        <span *ngIf="editBookForm.controls['name'].errors?.['bookNameExists']">Book name exists</span>
+        <span *ngIf="editBookForm.controls['title'].errors?.['required']">Title is required</span>
       </mat-error>
     </mat-form-field>
     <h4 class="mb-0">Author name:</h4>

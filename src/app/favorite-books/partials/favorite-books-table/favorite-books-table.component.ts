@@ -1,30 +1,52 @@
 import { ConfirmDialogComponent } from './../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { LocalStorageService } from './../../../shared/services/local-storage.service';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SubSink } from 'subsink';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Book } from '../../modals/book';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { EditBookDialogComponent } from './partials/edit-book-dialog/edit-book-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 interface BooksListState {
   error: boolean;
   deleting: boolean;
+  editing: boolean;
 }
 
 @Component({
   selector: 'app-favorite-books-table',
   templateUrl: './favorite-books-table.component.html',
+  styleUrls: ['./favorite-books-table.component.scss'],
 })
 export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
   @ViewChild('table') table?: MatTable<Partial<Book>>;
+  @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
+
   private subs = new SubSink();
 
-  displayedColumns: string[] = ['bookTitle', 'year', 'authorName', 'action'];
-
+  displayedColumns: string[] = [
+    'order',
+    'title',
+    'year',
+    'authorName',
+    'action',
+  ];
+  booksLength = 0;
+  private defaultPageSizeOptions: number[] = [5, 10];
+  pageSizeOptions?: number[];
   dataSource: MatTableDataSource<Partial<Book>> | undefined =
     new MatTableDataSource<Partial<Book>>();
 
@@ -32,12 +54,14 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
   state$ = new BehaviorSubject<BooksListState>({
     error: false,
     deleting: false,
+    editing: false,
   });
 
   constructor(
     private snackBar: MatSnackBar,
     private localStorageService: LocalStorageService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -47,8 +71,23 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.favoriteBooks$.next(data as Book[]);
           this.dataSource = new MatTableDataSource<Partial<Book>>(
-            this.favoriteBooks$.value
+            this.favoriteBooks$.value?.map((item, index) => {
+              return {
+                order: index,
+                ...item,
+              };
+            })
           );
+          // update paginator page size row to show all data in a page
+          if (this.favoriteBooks$.value) {
+            this.cdr.detectChanges();
+            this.booksLength = this.favoriteBooks$.value.length ?? 0;
+            if (this.dataSource && this.paginator) {
+              this.setPageSizeOptions();
+              this.dataSource.paginator = this.paginator;
+            }
+            if (this.sort && this.dataSource) this.dataSource.sort = this.sort;
+          }
         },
         error: () => {
           this.state$.next({
@@ -65,10 +104,11 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
         },
       });
   }
+
   ngOnDestroy(): void {
     this.subs.unsubscribe();
   }
-  onSortHandler(event: CdkDragDrop<Partial<Book>[]>) {
+  onDraggedEvent(event: CdkDragDrop<Partial<Book>[]>) {
     if (!this.dataSource) return;
     moveItemInArray<Partial<Book>>(
       this.dataSource.data,
@@ -78,34 +118,16 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
 
     if (this.dataSource.data)
       if (this.table) {
+        this.localStorageService.set('favoriteBooks', this.dataSource.data);
         this.table.renderRows();
       }
-    // if (this.certifiedBuilder$.value) {
-    //   const certifiedBuildersUpdates: { uid: string; order: number }[] =
-    //     this.certifiedBuilder$.value
-    //       .map((certified, index) => {
-    //         if (!certified.uid) throw new Error('certified uid is missing');
-    //         if (certified.order != index) {
-    //           return {
-    //             uid: certified.uid,
-    //             order: index,
-    //           };
-    //         } else return null;
-    //       })
-    //       .filter(
-    //         (certified): certified is { uid: string; order: number } =>
-    //           certified !== null
-    //       );
-
-    //   this.certifiedBuilderService.batchUpdate(certifiedBuildersUpdates);
-    // }
   }
   onDeleteBookHandler(book: Book) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         message:
           'Are you sure that you want to delete this book:  ' +
-          book.name +
+          book.title +
           ' ?',
       },
     });
@@ -132,6 +154,10 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(EditBookDialogComponent, dialogConfig);
     this.subs.sink = dialogRef.afterClosed().subscribe((dialogResult) => {
       if (dialogResult) {
+        this.state$.next({
+          ...this.state$.value,
+          editing: true,
+        });
         const storageBooks: Book[] | null =
           this.localStorageService.get('favoriteBooks');
         const updatedBooks = storageBooks?.map((item) => {
@@ -143,7 +169,40 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
           } else return item;
         });
         this.localStorageService.set('favoriteBooks', updatedBooks);
+        this.state$.next({
+          ...this.state$.value,
+          editing: false,
+        });
       }
     });
+  }
+  onDeleteListHandler() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: 'Are you sure that you want to delete all books?  ',
+      },
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((dialogResult) => {
+      if (dialogResult) {
+        this.state$.next({
+          ...this.state$.value,
+          deleting: true,
+        });
+        this.localStorageService.remove('favoriteBooks');
+        this.state$.next({
+          ...this.state$.value,
+          deleting: false,
+        });
+      }
+    });
+  }
+  setPageSizeOptions() {
+    this.pageSizeOptions = this.pageSizeOptions ?? this.defaultPageSizeOptions;
+    if (Math.max(...this.pageSizeOptions) < this.booksLength) {
+      this.pageSizeOptions = [...this.pageSizeOptions, this.booksLength];
+    } else {
+      // reset to default
+      this.pageSizeOptions = this.defaultPageSizeOptions;
+    }
   }
 }

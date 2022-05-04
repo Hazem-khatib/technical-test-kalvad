@@ -1,12 +1,6 @@
-import { LocalStorageService } from './../../../../../shared/services/local-storage.service';
 import { Book } from './../../../../modals/book';
 import { Component, Inject, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -17,14 +11,13 @@ export class EditBookDialogComponent implements OnInit {
   editBookForm?: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
-    private localStorageService: LocalStorageService,
     private dialogRef: MatDialogRef<EditBookDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Partial<Book>
   ) {}
 
   ngOnInit(): void {
     this.editBookForm = this.formBuilder.group({
-      name: [this.data.name, [Validators.required]],
+      title: [this.data.title, [Validators.required]],
       author: [this.data.author, Validators.required],
       year: [
         this.data.year,

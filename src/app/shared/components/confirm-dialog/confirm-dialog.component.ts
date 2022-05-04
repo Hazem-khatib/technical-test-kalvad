@@ -11,13 +11,13 @@ export class ConfirmDialogComponent {
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: ConfirmDialogComponent
   ) {
-    this.message = data.message;
+    this.message = data.message ?? 'Are you sure?';
   }
-  onConfirm(): void {
+  onConfirmHandler(): void {
     this.dialogRef.close(true);
   }
 
-  onDismiss(): void {
+  onDismissHandler(): void {
     this.dialogRef.close(false);
   }
 }

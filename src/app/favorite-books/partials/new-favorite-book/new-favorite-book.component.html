@@ -1,12 +1,12 @@
 <div class="row mt-4">
-  <div class="col-md-6 col-12">
+  <div class=" col-sm-8 col-md-6 col-12">
     <form [formGroup]="addBookForm" (ngSubmit)="onSubmitHandler()">
       <h4 class="mb-0">Name: </h4>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput formControlName="name" placeholder="ex. Dune">
+        <input matInput formControlName="title" placeholder="ex. Dune">
         <mat-error>
-          <span *ngIf="addBookForm.controls['name'].errors?.['required']">Name is required</span>
-          <span *ngIf="addBookForm.controls['name'].errors?.['bookNameExists']">Book name exists</span>
+          <span *ngIf="addBookForm.controls['title'].errors?.['required']">Book title is required</span>
+          <span *ngIf="addBookForm.controls['title'].errors?.['bookTitleExists']">Book title exists</span>
         </mat-error>
       </mat-form-field>
       <h4 class="mb-0">Author name:</h4>
