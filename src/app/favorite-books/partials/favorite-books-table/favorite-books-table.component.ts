@@ -28,7 +28,6 @@ interface BooksListState {
 @Component({
   selector: 'app-favorite-books-table',
   templateUrl: './favorite-books-table.component.html',
-  styleUrls: ['./favorite-books-table.component.scss'],
 })
 export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
   @ViewChild('table') table?: MatTable<Partial<Book>>;

@@ -1,13 +1,15 @@
-<section>
-  <h1 class="text-center">Favorite books</h1>
-  <ng-container *ngIf="!showNewBookForm;else newFavoriteBook">
-    <button mat-raised-button color="primary" (click)="onShowAddFormHandler(true)">
-      <mat-icon class="fs-5 mt-1">add</mat-icon>
-      New book
-    </button>
-  </ng-container>
-  <ng-template #newFavoriteBook>
-    <app-new-favorite-book (hideFormEvent)="onShowAddFormHandler($event)"></app-new-favorite-book>
-  </ng-template>
-  <app-favorite-books-table></app-favorite-books-table>
-</section>
+  <div class="container py-5">
+    <h1 class="text-center mb-4 text-primary">Favorite books</h1>
+    <ng-container *ngIf="!showNewBookForm;else newFavoriteBook">
+      <div class="d-flex justify-content-end mb-4"> <button mat-raised-button color="primary"
+          (click)="onShowAddFormHandler(true)">
+          <mat-icon>add</mat-icon>
+          New book
+        </button></div>
+      <app-favorite-books-table></app-favorite-books-table>
+    </ng-container>
+    <ng-template #newFavoriteBook>
+      <app-new-favorite-book (hideFormEvent)="onShowAddFormHandler($event)"></app-new-favorite-book>
+    </ng-template>
+
+  </div>
