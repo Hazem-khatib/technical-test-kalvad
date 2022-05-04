@@ -1,7 +1,6 @@
-import { ConfirmDialogComponent } from './../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { Book } from '../../model/book';
 import { LocalStorageService } from './../../../shared/services/local-storage.service';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -10,15 +9,15 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { SubSink } from 'subsink';
-import { BehaviorSubject } from 'rxjs';
-import { Book } from '../../model/book';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { EditBookDialogComponent } from './partials/edit-book-dialog/edit-book-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
+import { SubSink } from 'subsink';
+import { BehaviorSubject } from 'rxjs';
+import { ConfirmDialogComponent } from './../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { EditBookDialogComponent } from './partials/edit-book-dialog/edit-book-dialog.component';
 interface BooksListState {
   error: boolean;
   deleting: boolean;
@@ -72,8 +71,8 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
           this.dataSource = new MatTableDataSource<Partial<Book>>(
             this.favoriteBooks$.value?.map((item, index) => {
               return {
-                order: index,
                 ...item,
+                order: index,
               };
             })
           );
@@ -147,9 +146,6 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '60%';
     dialogConfig.data = book;
-    dialogConfig.position = {
-      top: '0',
-    };
     const dialogRef = this.dialog.open(EditBookDialogComponent, dialogConfig);
     this.subs.sink = dialogRef.afterClosed().subscribe((dialogResult) => {
       if (dialogResult) {

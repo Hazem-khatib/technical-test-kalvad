@@ -3,7 +3,7 @@
     <div class="col-sm-12">
       <mat-card class="px-0">
         <div class="w-100 position-relative overflow-auto">
-          <table mat-table #table matSort matTableResponsive [dataSource]="dataSource" class="books-table w-100"
+          <table mat-table #table matSort matTableResponsive [dataSource]="dataSource" class="w-100"
             style=" overflow-x: scroll;" cdkDropList [cdkDropListData]="dataSource.data"
             (cdkDropListDropped)="onDraggedEvent($event)">
             <ng-container matColumnDef="order">
