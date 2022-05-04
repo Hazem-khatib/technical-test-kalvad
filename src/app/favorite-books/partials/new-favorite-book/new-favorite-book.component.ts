@@ -3,7 +3,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Book } from '../../modals/book';
+import { Book } from '../../model/book';
 @Component({
   selector: 'app-new-favorite-book',
   templateUrl: './new-favorite-book.component.html',

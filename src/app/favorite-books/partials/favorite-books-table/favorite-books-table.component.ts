@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SubSink } from 'subsink';
 import { BehaviorSubject } from 'rxjs';
-import { Book } from '../../modals/book';
+import { Book } from '../../model/book';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { EditBookDialogComponent } from './partials/edit-book-dialog/edit-book-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
