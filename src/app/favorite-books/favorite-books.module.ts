@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from '../shared/shared.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
+
 import { EditBookDialogComponent } from './partials/favorite-books-table/partials/edit-book-dialog/edit-book-dialog.component';
 import { FavoriteBooksComponent } from './favorite-books.component';
 import { FavoriteBooksRoutingModule } from './favorite-books-routing.module';
