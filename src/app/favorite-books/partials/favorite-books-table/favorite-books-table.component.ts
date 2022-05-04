@@ -78,15 +78,15 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
               };
             })
           );
-          // update paginator page size row to show all data in a page
-          if (this.favoriteBooks$.value) {
+          // update paginator page size and sort when GRUD operations
+          if (this.dataSource && this.favoriteBooks$.value) {
             this.cdr.detectChanges();
-            this.booksLength = this.favoriteBooks$.value.length ?? 0;
-            if (this.dataSource && this.paginator) {
+            this.booksLength = this.favoriteBooks$.value.length;
+            if (this.paginator) {
               this.setPageSizeOptions();
               this.dataSource.paginator = this.paginator;
             }
-            if (this.sort && this.dataSource) this.dataSource.sort = this.sort;
+            if (this.sort) this.dataSource.sort = this.sort;
           }
         },
         error: () => {

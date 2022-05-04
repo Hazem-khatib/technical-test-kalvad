@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class LocalStorageService {
   subjects: { [key: string]: BehaviorSubject<any> } = {};
 
@@ -37,36 +35,5 @@ export class LocalStorageService {
   remove(key: string): void {
     localStorage.removeItem(key);
     this.subjects[key]?.next(null);
-  }
-
-  clear(): void {
-    localStorage.clear();
-    Object.keys(this.subjects).forEach((key) => this.subjects[key].next(null));
-  }
-
-  get length(): number {
-    return localStorage.length;
-  }
-
-  get keys(): string[] {
-    return Object.keys(localStorage);
-  }
-
-  getItem(key: string): string | null {
-    return localStorage.getItem(key);
-  }
-
-  setItem(key: string, value: string): void {
-    localStorage.setItem(key, value);
-    this.subjects[key]?.next(value);
-  }
-
-  removeItem(key: string): void {
-    localStorage.removeItem(key);
-    this.subjects[key]?.next(null);
-  }
-
-  key(index: number): string | null {
-    return localStorage.key(index);
   }
 }
