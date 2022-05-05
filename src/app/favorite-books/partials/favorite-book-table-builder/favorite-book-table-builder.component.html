@@ -1,0 +1,27 @@
+<ng-container *ngIf="state$.value.showListName">
+  <div class="row justify-content-center">
+    <div class="  col-sm-8 col-md-6">
+      <mat-card class="p-sm-4 p-3">
+        <h2 mat-dialog-title>New List</h2>
+        <form [formGroup]="listNameForm" (ngSubmit)="onSubmitHandler()">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>List name</mat-label>
+            <input matInput formControlName="name" placeholder="ex. Best science fiction">
+            <mat-error>
+              <span *ngIf="listNameForm.controls['name'].errors?.['required']">List name is required</span>
+              <span *ngIf="listNameForm.controls['name'].errors?.['bookListNameExists']">List name exists</span>
+            </mat-error>
+          </mat-form-field>
+          <div class="d-flex mt-2">
+            <button mat-raised-button type="submit" color="primary" class="me-4">Add List</button>
+            <button mat-button color="primary" (click)="onCancelHandler($event)">Cancel</button>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="state$.value.showNewBook">
+  <app-new-favorite-book [listName]="listNameForm.value.name" (hideNewBookEvent)="onCloseBuilderHandler($event)">
+  </app-new-favorite-book>
+</ng-container>

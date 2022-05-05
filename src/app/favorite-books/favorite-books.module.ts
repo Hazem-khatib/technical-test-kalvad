@@ -19,12 +19,14 @@ import { FavoriteBooksComponent } from './favorite-books.component';
 import { FavoriteBooksRoutingModule } from './favorite-books-routing.module';
 import { NewFavoriteBookComponent } from './partials/new-favorite-book/new-favorite-book.component';
 import { FavoriteBooksTableComponent } from './partials/favorite-books-table/favorite-books-table.component';
+import { FavoriteBookTableBuilderComponent } from './partials/favorite-book-table-builder/favorite-book-table-builder.component';
 @NgModule({
   declarations: [
     FavoriteBooksComponent,
     NewFavoriteBookComponent,
     FavoriteBooksTableComponent,
     EditBookDialogComponent,
+    FavoriteBookTableBuilderComponent,
   ],
   imports: [
     CommonModule,

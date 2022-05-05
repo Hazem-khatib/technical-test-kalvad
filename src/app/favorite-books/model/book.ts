@@ -1,3 +1,6 @@
+export interface BooksList {
+  [key: string]: Book[];
+}
 export interface Book {
   id: string;
   order?: number;

@@ -1,36 +1,45 @@
 <div class="row justify-content-center">
   <div class=" col-sm-8 col-md-6">
     <mat-card class="p-sm-4 p-3">
-      <h2 mat-dialog-title>New book</h2>
-      <form [formGroup]="addBookForm" (ngSubmit)="onSubmitHandler()">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Book name</mat-label>
-          <input matInput formControlName="title" placeholder="ex. Dune">
-          <mat-error>
-            <span *ngIf="addBookForm.controls['title'].errors?.['required']">Book title is required</span>
-            <span *ngIf="addBookForm.controls['title'].errors?.['bookTitleExists']">Book title exists</span>
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Author name</mat-label>
-          <input matInput formControlName="author" placeholder="ex. Frank herbert">
-          <mat-error>
-            Author name is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-50">
-          <mat-label>Publish year</mat-label>
-          <input matInput formControlName="year" type="number" placeholder="ex. 1932">
-          <mat-error>
-            <span *ngIf="addBookForm.controls['year'].errors?.['required']">Publish Year is required</span>
-            <span *ngIf="addBookForm.controls['year'].errors?.['pattern']">Publish year must be valid number</span>
-          </mat-error>
-        </mat-form-field>
-        <div class="d-flex mt-2">
-          <button mat-raised-button type="submit" color="primary" class="me-4">Add book</button>
-          <button mat-button color="primary" (click)="onCancelHandler($event)">Cancel</button>
-        </div>
-      </form>
+      <ng-container *ngIf="state$.value.showForm">
+        <h2 mat-dialog-title>Add new book to {{listName??''}}</h2>
+        <form [formGroup]="addBookForm" (ngSubmit)="onSubmitHandler()">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Book name</mat-label>
+            <input matInput formControlName="title" placeholder="ex. Dune">
+            <mat-error>
+              <span *ngIf="addBookForm.controls['title'].errors?.['required']">Book title is required</span>
+              <span *ngIf="addBookForm.controls['title'].errors?.['bookTitleExists']">Book title exists</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Author name</mat-label>
+            <input matInput formControlName="author" placeholder="ex. Frank herbert">
+            <mat-error>
+              Author name is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-50">
+            <mat-label>Publish year</mat-label>
+            <input matInput formControlName="year" type="number" placeholder="ex. 1932">
+            <mat-error>
+              <span *ngIf="addBookForm.controls['year'].errors?.['required']">Publish Year is required</span>
+              <span *ngIf="addBookForm.controls['year'].errors?.['pattern']">Publish year must be valid number</span>
+            </mat-error>
+          </mat-form-field>
+          <div class="d-flex mt-2">
+            <button mat-raised-button type="submit" color="primary" class="me-4">Add book</button>
+            <button mat-button color="primary" (click)="onCancelHandler($event)">Cancel</button>
+          </div>
+        </form>
+      </ng-container>
+      <ng-container *ngIf="!state$.value.showForm">
+        <h2 mat-dialog-title>Would you like to add another book to {{listName??''}}?</h2>
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary" class="me-3" (click)="onAddNewBookHandler()">Add book</button>
+          <button mat-raised-button color="accent" (click)="onCancelHandler($event)">Finish</button>
+        </mat-card-actions>
+      </ng-container>
     </mat-card>
   </div>
 </div>

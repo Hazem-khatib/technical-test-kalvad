@@ -1,6 +1,6 @@
   <div class="container py-5">
     <h1 class="text-center mb-4 text-primary">Favorite books</h1>
-    <ng-container *ngIf="!showNewBookForm;else newFavoriteBook">
+    <!-- <ng-container *ngIf="!showNewBookForm;else newFavoriteBook">
       <div class="d-flex justify-content-end mb-4"> <button mat-raised-button color="primary"
           (click)="onShowAddFormHandler(true)">
           <mat-icon>add</mat-icon>
@@ -10,5 +10,6 @@
     </ng-container>
     <ng-template #newFavoriteBook>
       <app-new-favorite-book (hideFormEvent)="onShowAddFormHandler($event)"></app-new-favorite-book>
-    </ng-template>
+    </ng-template> -->
+    <app-favorite-book-table-builder></app-favorite-book-table-builder>
   </div>
