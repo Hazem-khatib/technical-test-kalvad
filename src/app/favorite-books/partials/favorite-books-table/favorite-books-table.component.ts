@@ -189,12 +189,9 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
     });
   }
   setPageSizeOptions() {
-    this.pageSizeOptions = this.pageSizeOptions ?? this.defaultPageSizeOptions;
+    this.pageSizeOptions = this.defaultPageSizeOptions;
     if (Math.max(...this.pageSizeOptions) < this.booksLength) {
       this.pageSizeOptions = [...this.pageSizeOptions, this.booksLength];
-    } else {
-      // reset to default
-      this.pageSizeOptions = this.defaultPageSizeOptions;
     }
   }
 }
