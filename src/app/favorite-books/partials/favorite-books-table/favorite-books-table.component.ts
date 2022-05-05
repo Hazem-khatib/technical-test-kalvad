@@ -76,7 +76,7 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
               };
             })
           );
-          // update paginator page size and sort when GRUD operations
+          // update paginator page size options to be possible to see all books in one page and sort after GRUD operations
           if (this.dataSource && this.favoriteBooks$.value) {
             this.cdr.detectChanges();
             this.booksLength = this.favoriteBooks$.value.length;
@@ -113,12 +113,8 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
-
     if (this.dataSource.data)
-      if (this.table) {
-        this.localStorageService.set('favoriteBooks', this.dataSource.data);
-        this.table.renderRows();
-      }
+      this.localStorageService.set('favoriteBooks', this.dataSource.data);
   }
   onDeleteBookHandler(book: Book) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -184,6 +180,7 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
           deleting: true,
         });
         this.localStorageService.remove('favoriteBooks');
+
         this.state$.next({
           ...this.state$.value,
           deleting: false,

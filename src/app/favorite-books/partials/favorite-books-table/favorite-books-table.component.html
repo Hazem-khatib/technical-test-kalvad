@@ -19,11 +19,11 @@
             </ng-container>
             <ng-container matColumnDef="title" sticky>
               <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
-                <span class="text-nowrap ms-1"> Book title</span>
+                <span class="text-nowrap ms-2"> Book title</span>
               </th>
               <td mat-cell *matCellDef="let element">
                 <span class="
-      text-nowrap ms-1 me-2">
+      text-nowrap mx-2">
                   {{ element.title ?? 'N/A' }}
                 </span>
               </td>
@@ -76,12 +76,17 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <button mat-raised-button color="warn" (click)="onDeleteListHandler()">Delete List</button>
+      <button mat-raised-button color="warn" (click)="onDeleteListHandler()">Delete list</button>
     </div>
   </div>
 </ng-container>
 <ng-container *ngIf="dataSource && dataSource.data.length === 0 &&  !state$.value.error ">
   <div class="d-flex justify-content-center py-4">
     <p class=" text-muted">There are no books </p>
+  </div>
+</ng-container>
+<ng-container *ngIf="!dataSource || state$.value.error ">
+  <div class="d-flex justify-content-center py-4">
+    <p class=" text-muted">Error occurred, please try later </p>
   </div>
 </ng-container>
