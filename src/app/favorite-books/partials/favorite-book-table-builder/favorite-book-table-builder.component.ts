@@ -3,11 +3,10 @@ import { LocalStorageService } from './../../../shared/services/local-storage.se
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BooksList } from '../../model/book';
+import { BooksList } from '../../model/book-list';
 interface ListBuilderState {
   showNewBook: boolean;
   showListName: boolean;
-  error: boolean;
 }
 @Component({
   selector: 'app-favorite-book-table-builder',
@@ -22,7 +21,6 @@ export class FavoriteBookTableBuilderComponent {
   state$ = new BehaviorSubject<ListBuilderState>({
     showNewBook: false,
     showListName: true,
-    error: false,
   });
   constructor(
     private formBuilder: FormBuilder,

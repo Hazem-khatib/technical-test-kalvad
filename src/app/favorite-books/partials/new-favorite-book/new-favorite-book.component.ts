@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Book, BooksList } from '../../model/book';
+import { Book, BooksList } from '../../model/book-list';
 
 @Component({
   selector: 'app-new-favorite-book',

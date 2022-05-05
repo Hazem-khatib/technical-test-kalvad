@@ -1,4 +1,4 @@
-import { Book } from '../../model/book';
+import { Book } from '../../model/book-list';
 import { LocalStorageService } from './../../../shared/services/local-storage.service';
 import {
   ChangeDetectorRef,
