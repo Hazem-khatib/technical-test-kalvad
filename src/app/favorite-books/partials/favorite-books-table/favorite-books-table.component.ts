@@ -168,7 +168,7 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '60%';
-    dialogConfig.data = book;
+    dialogConfig.data = { ...book, listName: this.listName };
 
     const dialogRef = this.dialog.open(EditBookDialogComponent, dialogConfig);
     this.subs.sink = dialogRef.afterClosed().subscribe((dialogResult) => {

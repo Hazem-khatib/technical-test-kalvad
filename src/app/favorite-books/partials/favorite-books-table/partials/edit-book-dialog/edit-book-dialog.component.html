@@ -6,6 +6,7 @@
       <input matInput formControlName="title" placeholder="ex. Dune">
       <mat-error>
         <span *ngIf="editBookForm.controls['title'].errors?.['required']">Title is required</span>
+        <span *ngIf="editBookForm.controls['title'].errors?.['bookTitleExists']">Book title exists</span>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" class="w-100">
