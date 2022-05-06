@@ -11,7 +11,6 @@ interface ListBuilderState {
 @Component({
   selector: 'app-favorite-book-table-builder',
   templateUrl: './favorite-book-table-builder.component.html',
-  styleUrls: ['./favorite-book-table-builder.component.scss'],
 })
 export class FavoriteBookTableBuilderComponent {
   @Output() closeListBuilderEvent = new EventEmitter<boolean>();

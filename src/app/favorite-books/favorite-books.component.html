@@ -20,7 +20,7 @@
         </ng-container>
       </ng-container>
       <ng-container *ngIf="state$.value.showNewList">
-        <app-favorite-book-table-builder (closeListBuilderEvent)="closeListBuilder($event)">
+        <app-favorite-book-table-builder (closeListBuilderEvent)="onCloseListBuilder($event)">
         </app-favorite-book-table-builder>
       </ng-container>
       <ng-container *ngIf="state$.value.showNewBook && state$.value.listName  ">

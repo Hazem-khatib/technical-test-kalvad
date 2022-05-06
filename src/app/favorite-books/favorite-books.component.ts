@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BooksList } from './model/book-list';
 import { LocalStorageService } from '../shared/services/local-storage.service';
 interface FavoriteBooksState {
@@ -31,15 +31,15 @@ export class FavoriteBooksComponent implements OnInit {
   onNewListHandler(e: boolean) {
     this.state$.next({
       ...this.state$.value,
-      showNewList: true,
-      showLists: false,
+      showNewList: e,
+      showLists: !e,
     });
   }
-  closeListBuilder(e: boolean) {
+  onCloseListBuilder(e: boolean) {
     this.state$.next({
       ...this.state$.value,
-      showNewList: false,
-      showLists: true,
+      showNewList: !e,
+      showLists: e,
     });
     this.updateData();
   }
