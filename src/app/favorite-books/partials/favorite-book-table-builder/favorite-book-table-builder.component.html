@@ -22,6 +22,6 @@
   </div>
 </ng-container>
 <ng-container *ngIf="state$.value.showNewBook">
-  <app-new-favorite-book [listName]="listNameForm.value.name" (hideNewBookEvent)="onCloseBuilderHandler($event)">
+  <app-new-favorite-book [listName]="listNameForm.value.name" (hideNewBookEvent)="onCancelHandler($event)">
   </app-new-favorite-book>
 </ng-container>

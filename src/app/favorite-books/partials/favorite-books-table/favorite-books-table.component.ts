@@ -1,8 +1,9 @@
-import { Book } from '../../model/book-list';
+import { Book, BooksList } from '../../model/book-list';
 import { LocalStorageService } from './../../../shared/services/local-storage.service';
 import {
   ChangeDetectorRef,
   Component,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -29,11 +30,10 @@ interface BooksListState {
   templateUrl: './favorite-books-table.component.html',
 })
 export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
+  @Input() listName?: string;
   @ViewChild('table') table?: MatTable<Partial<Book>>;
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
-
-  private subs = new SubSink();
 
   displayedColumns: string[] = [
     'order',
@@ -43,13 +43,17 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
     'action',
   ];
   booksLength = 0;
+  private subs = new SubSink();
+  private storageLists?: BooksList;
   private defaultPageSizeOptions: number[] = [5, 10];
   pageSizeOptions?: number[];
   dataSource: MatTableDataSource<Partial<Book>> | undefined =
     new MatTableDataSource<Partial<Book>>();
 
-  favoriteBooks$ = new BehaviorSubject<Partial<Book>[] | undefined>(undefined);
-  state$ = new BehaviorSubject<BooksListState>({
+  favoriteBooksList$ = new BehaviorSubject<Partial<Book>[] | undefined>(
+    undefined
+  );
+  state$ = new BehaviorSubject<Partial<BooksListState>>({
     error: false,
     deleting: false,
     editing: false,
@@ -63,13 +67,16 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    if (!this.listName) return;
     this.subs.sink = this.localStorageService
       .getSubject('favoriteBooks')
       .subscribe({
         next: (data) => {
-          this.favoriteBooks$.next(data as Book[]);
+          if (!this.listName) return;
+          this.storageLists = data as BooksList;
+          this.favoriteBooksList$.next(this.storageLists[this.listName]);
           this.dataSource = new MatTableDataSource<Partial<Book>>(
-            this.favoriteBooks$.value?.map((item, index) => {
+            this.favoriteBooksList$.value?.map((item, index) => {
               return {
                 ...item,
                 order: index,
@@ -77,9 +84,9 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
             })
           );
           // update paginator page size options to be possible to see all books in one page and sort after GRUD operations
-          if (this.dataSource && this.favoriteBooks$.value) {
+          if (this.dataSource && this.favoriteBooksList$.value) {
             this.cdr.detectChanges();
-            this.booksLength = this.favoriteBooks$.value.length;
+            this.booksLength = this.favoriteBooksList$.value.length;
             if (this.paginator) {
               this.setPageSizeOptions();
               this.dataSource.paginator = this.paginator;
@@ -93,7 +100,9 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
             error: true,
           });
           this.snackBar.open(
-            'Unable to get books list, please try again later',
+            'Unable to get books of ' +
+              this.listName +
+              ' list, please try again later',
             'Dismiss',
             {
               duration: -1,
@@ -113,10 +122,13 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
-    if (this.dataSource.data)
-      this.localStorageService.set('favoriteBooks', this.dataSource.data);
+    if (this.dataSource.data && this.listName)
+      this.localStorageService.set('favoriteBooks', {
+        ...this.storageLists,
+        [this.listName]: this.dataSource.data,
+      });
   }
-  onDeleteBookHandler(book: Book) {
+  onDeleteBookHandler(book: Partial<Book>) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         message:
@@ -126,32 +138,42 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
       },
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((dialogResult) => {
-      if (dialogResult) {
-        const storageBooks: Book[] | null =
-          this.localStorageService.get('favoriteBooks');
+      if (dialogResult && this.listName && this.storageLists) {
+        this.state$.next({
+          ...this.state$.value,
+          deleting: true,
+        });
+        const storageBooks: Book[] | null = this.storageLists[this.listName];
         const filteredBooks = storageBooks?.filter(
           (item) => item.id !== book.id
         );
-        this.localStorageService.set('favoriteBooks', filteredBooks);
+        this.localStorageService.set('favoriteBooks', {
+          ...this.storageLists,
+          [this.listName]: filteredBooks,
+        });
+        this.state$.next({
+          ...this.state$.value,
+          deleting: false,
+        });
       }
     });
   }
-  onEditBookHandler(book: Book) {
+  onEditBookHandler(book: Partial<Book>) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '60%';
     dialogConfig.data = book;
+
     const dialogRef = this.dialog.open(EditBookDialogComponent, dialogConfig);
     this.subs.sink = dialogRef.afterClosed().subscribe((dialogResult) => {
-      if (dialogResult) {
+      if (dialogResult && this.listName && this.storageLists) {
         this.state$.next({
           ...this.state$.value,
           editing: true,
         });
-        const storageBooks: Book[] | null =
-          this.localStorageService.get('favoriteBooks');
-        const updatedBooks = storageBooks?.map((item) => {
+
+        const updatedBooks = this.storageLists[this.listName]?.map((item) => {
           if (item.id === book.id) {
             return {
               ...item,
@@ -159,7 +181,10 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
             };
           } else return item;
         });
-        this.localStorageService.set('favoriteBooks', updatedBooks);
+        this.localStorageService.set('favoriteBooks', {
+          ...this.storageLists,
+          [this.listName]: updatedBooks,
+        });
         this.state$.next({
           ...this.state$.value,
           editing: false,
@@ -170,17 +195,17 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
   onDeleteListHandler() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: 'Are you sure that you want to delete all books?  ',
+        message: 'Are you sure that you want to delete ' + this.listName + ' ?',
       },
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((dialogResult) => {
-      if (dialogResult) {
+      if (dialogResult && this.storageLists && this.listName) {
         this.state$.next({
           ...this.state$.value,
           deleting: true,
         });
-        this.localStorageService.remove('favoriteBooks');
-
+        delete this.storageLists[this.listName];
+        this.localStorageService.set('favoriteBooks', this.storageLists);
         this.state$.next({
           ...this.state$.value,
           deleting: false,
@@ -194,4 +219,5 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
       this.pageSizeOptions = [...this.pageSizeOptions, this.booksLength];
     }
   }
+  onShowAddBookHandler(e: any) {}
 }

@@ -1,92 +1,104 @@
-<ng-container *ngIf="dataSource && dataSource.data.length > 0 &&  !state$.value.error ">
-  <div class="row mb-3">
-    <div class="col-sm-12">
-      <mat-card class="px-0">
-        <div class="w-100 position-relative overflow-auto">
-          <table mat-table #table matSort matTableResponsive [dataSource]="dataSource" class="w-100"
-            style=" overflow-x: scroll;" cdkDropList [cdkDropListData]="dataSource.data"
-            (cdkDropListDropped)="onDraggedEvent($event)">
-            <ng-container matColumnDef="order">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;">
-                <span class="text-nowrap"> No.</span>
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <span class="
+<ng-container *ngIf="listName">
+
+  <div class="d-flex justify-content-between mb-4 mt-5">
+    <h3 class="mb-0 align-bottom">{{listName}} </h3>
+    <button mat-raised-button color="primary" (click)="onShowAddBookHandler($event)">
+      <mat-icon>add</mat-icon>
+      New book
+    </button>
+  </div>
+  <ng-container *ngIf="dataSource && dataSource.data.length > 0 &&  !state$.value.error ">
+    <div class="row mb-3">
+      <div class="col-sm-12">
+        <mat-card class="px-0">
+          <div class="w-100 position-relative overflow-auto">
+            <table mat-table #table matSort matTableResponsive [dataSource]="dataSource" class="w-100"
+              style=" overflow-x: scroll;" cdkDropList [cdkDropListData]="dataSource.data"
+              (cdkDropListDropped)="onDraggedEvent($event)">
+              <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;">
+                  <span class="text-nowrap"> No.</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span class="
       text-nowrap me-2">
-                  {{ element.order+1 ?? 'N/A' }}
-                </span>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="title" sticky>
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
-                <span class="text-nowrap ms-2"> Book title</span>
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <span class="
+                    {{ element.order+1 ?? 'N/A' }}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="title" sticky>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                  <span class="text-nowrap ms-2"> Book title</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span class="
       text-nowrap mx-2">
-                  {{ element.title ?? 'N/A' }}
-                </span>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="year">
-              <th mat-header-cell *matHeaderCellDef style="width: 20%;">
-                <span class="text-nowrap">Year</span>
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <span class="me-2"> {{ element.year ?? 'N/A' }}</span>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="authorName">
-              <th mat-header-cell *matHeaderCellDef style="width: 25%;">
-                <span class="text-nowrap">Author name</span>
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <span class="me-2"> {{ element.author ?? 'N/A' }}</span>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef style="width: 25%;">
-                <span class="d-block text-nowrap text-center">Action</span>
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <div class="d-flex justify-content-end">
-                  <button mat-icon-button color="primary" (click)="onEditBookHandler(element)">
-                    <mat-icon>create</mat-icon>
-                  </button>
-                  <button mat-icon-button color="warn" (click)="onDeleteBookHandler(element)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" cdkDrag [cdkDragData]="row"></tr>
-          </table>
-          <div *ngIf="state$.value.editing || state$.value.deleting"
-            class=" position-absolute top-50 start-50 d-flex justify-content-center align-items-center">
-            <mat-spinner color="primary" [diameter]="25"> </mat-spinner>
+                    {{ element.title ?? 'N/A' }}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="year">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;">
+                  <span class="text-nowrap">Year</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span class="me-2"> {{ element.year ?? 'N/A' }}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="authorName">
+                <th mat-header-cell *matHeaderCellDef style="width: 25%;">
+                  <span class="text-nowrap">Author name</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span class="me-2"> {{ element.author ?? 'N/A' }}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef style="width: 25%;">
+                  <span class="d-block text-nowrap text-center">Action</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="d-flex justify-content-end">
+                    <button mat-icon-button color="primary" (click)="onEditBookHandler(element)">
+                      <mat-icon>create</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="onDeleteBookHandler(element)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" cdkDrag [cdkDragData]="row">
+              </tr>
+            </table>
+            <div *ngIf="state$.value.editing || state$.value.deleting"
+              class=" position-absolute top-50 start-50 d-flex justify-content-center align-items-center">
+              <mat-spinner color="primary" [diameter]="25"> </mat-spinner>
+            </div>
           </div>
-        </div>
-        <mat-paginator [length]="booksLength" [pageSize]="5" [pageSizeOptions]="pageSizeOptions??[]"
-          aria-label="Select page">
-        </mat-paginator>
-        <p class="ms-3 fs-sm">* Reorder your favorite books by dragging and dropping</p>
-      </mat-card>
+          <mat-paginator [length]="booksLength" [pageSize]="5" [pageSizeOptions]="pageSizeOptions??[]"
+            aria-label="Select page">
+          </mat-paginator>
+          <p class="ms-3 fs-sm">* Reorder your favorite books by dragging and dropping</p>
+        </mat-card>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <button mat-raised-button color="warn" (click)="onDeleteListHandler()">Delete list</button>
+    <div class="row">
+      <div class="col-sm-12">
+        <button mat-raised-button color="warn" (click)="onDeleteListHandler()">Delete list</button>
+      </div>
     </div>
-  </div>
-</ng-container>
-<ng-container *ngIf="dataSource && dataSource.data.length === 0 &&  !state$.value.error ">
-  <div class="d-flex justify-content-center py-4">
-    <p class=" text-muted">There are no books </p>
-  </div>
-</ng-container>
-<ng-container *ngIf="!dataSource || state$.value.error ">
-  <div class="d-flex justify-content-center py-4">
-    <p class=" text-muted">Error occurred, please try later </p>
-  </div>
+  </ng-container>
+  <ng-container *ngIf="dataSource && dataSource.data.length === 0 &&  !state$.value.error ">
+    <div class="d-flex justify-content-center py-4">
+      <p class=" text-muted">There are no books </p>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!dataSource || state$.value.error ">
+    <div class="d-flex justify-content-center py-4">
+      <p class=" text-muted">Error occurred, please try later </p>
+    </div>
+  </ng-container>
+
 </ng-container>
