@@ -34,6 +34,7 @@ interface BooksListState {
 export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
   @Input() listName?: string;
   @Output() openNewBookEvent = new EventEmitter<boolean>();
+  @Output() deletedListEvent = new EventEmitter<boolean>();
   @ViewChild('table') table?: MatTable<Partial<Book>>;
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -158,6 +159,7 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
           ...this.state$.value,
           deleting: false,
         });
+        this.deletedListEvent.emit(true);
       }
     });
   }

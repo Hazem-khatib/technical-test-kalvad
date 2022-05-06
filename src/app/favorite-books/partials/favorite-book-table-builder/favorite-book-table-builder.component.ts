@@ -17,7 +17,7 @@ export class FavoriteBookTableBuilderComponent {
   listNameForm = this.formBuilder.group({
     name: [null, [Validators.required, this.validateBookName()]],
   });
-  state$ = new BehaviorSubject<ListBuilderState>({
+  state$ = new BehaviorSubject<Partial<ListBuilderState>>({
     showNewBook: false,
     showListName: true,
   });
@@ -31,7 +31,7 @@ export class FavoriteBookTableBuilderComponent {
     const storageBooksList: BooksList | null =
       this.localStorageService.get('favoriteBooks');
     this.localStorageService.set('favoriteBooks', {
-      ...storageBooksList,
+      ...(storageBooksList ?? {}),
       [this.listNameForm.value.name]: [],
     });
     this.state$.next({

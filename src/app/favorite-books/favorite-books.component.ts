@@ -59,6 +59,9 @@ export class FavoriteBooksComponent implements OnInit {
     });
     this.updateData();
   }
+  onDeleteListHandler(e: boolean) {
+    if (e) this.updateData();
+  }
   updateData() {
     this.localStorageService
       .getSubject('favoriteBooks')

@@ -20,7 +20,9 @@
       <input matInput formControlName="year" type="number" placeholder="ex. 1932">
       <mat-error>
         <span *ngIf="editBookForm.controls['year'].errors?.['required']">Publish Year is required</span>
-        <span *ngIf="editBookForm.controls['year'].errors?.['pattern']">Publish year must be valid number</span>
+        <span *ngIf="editBookForm.controls['year'].errors?.['pattern'] ||
+          editBookForm.controls['year'].errors?.['max']">Publish
+          Year must be valid number</span>
       </mat-error>
     </mat-form-field>
   </mat-dialog-content>

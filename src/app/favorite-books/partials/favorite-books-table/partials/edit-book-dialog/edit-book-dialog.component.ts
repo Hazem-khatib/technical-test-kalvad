@@ -21,7 +21,11 @@ export class EditBookDialogComponent implements OnInit {
       author: [this.data.author, Validators.required],
       year: [
         this.data.year,
-        [Validators.required, Validators.pattern('^[0-9]{4,4}$')],
+        [
+          Validators.required,
+          Validators.max(new Date().getFullYear()),
+          Validators.pattern('^[0-9]{4,4}$'),
+        ],
       ],
     });
   }

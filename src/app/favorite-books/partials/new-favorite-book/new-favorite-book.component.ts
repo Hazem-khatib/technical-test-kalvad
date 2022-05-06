@@ -17,7 +17,14 @@ export class NewFavoriteBookComponent {
   addBookForm = this.formBuilder.group({
     title: [null, [Validators.required, this.validateBookName()]],
     author: [null, Validators.required],
-    year: [1932, [Validators.required, Validators.pattern('^[0-9]{4,4}$')]],
+    year: [
+      1932,
+      [
+        Validators.required,
+        Validators.max(new Date().getFullYear()),
+        Validators.pattern('^[0-9]{4,4}$'),
+      ],
+    ],
   });
   state$ = new BehaviorSubject<{ showForm: boolean }>({
     showForm: true,
@@ -45,7 +52,7 @@ export class NewFavoriteBookComponent {
       this.localStorageService.get('favoriteBooks');
     const bookList = storageBooksLists ? storageBooksLists[this.listName] : [];
     this.localStorageService.set('favoriteBooks', {
-      ...storageBooksLists,
+      ...(storageBooksLists ?? {}),
       [this.listName]: [
         ...bookList,
         {
