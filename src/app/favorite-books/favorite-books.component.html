@@ -2,11 +2,12 @@
     <h1 class="text-center mb-4 text-primary">Favorite books</h1>
     <ng-container *ngIf="!state$.value.error">
       <ng-container *ngIf="state$.value.showLists">
-        <div class="d-flex justify-content-end mb-4"> <button mat-raised-button color="accent"
-            (click)="onNewListHandler(true)">
+        <div class="d-flex justify-content-end mb-4">
+          <button mat-raised-button color="accent" (click)="onNewListHandler(true)">
             <mat-icon>add</mat-icon>
             New List
-          </button></div>
+          </button>
+        </div>
         <ng-container *ngIf="storageLists$.value && (storageLists$.value | json) !=='{}'">
           <app-favorite-books-table *ngFor="let list of storageLists$.value | keyvalue;" [listName]="list.key"
             (openNewBookEvent)="onOpenNewBookHandler($event,list.key)">
@@ -32,17 +33,4 @@
         <p class=" text-muted">Error occurred, please try later </p>
       </div>
     </ng-container>
-    <!-- <ng-container *ngIf="!showNewBookForm;else newFavoriteBook">
-      <div class="d-flex justify-content-end mb-4"> <button mat-raised-button color="primary"
-          (click)="onShowAddFormHandler(true)">
-          <mat-icon>add</mat-icon>
-          New book
-        </button></div>
-      <app-favorite-books-table></app-favorite-books-table>
-    </ng-container>
-    <ng-template #newFavoriteBook>
-      <app-new-favorite-book (hideFormEvent)="onShowAddFormHandler($event)"></app-new-favorite-book>
-    </ng-template>
-    <app-favorite-book-table-builder></app-favorite-book-table-builder> -->
-
   </div>
