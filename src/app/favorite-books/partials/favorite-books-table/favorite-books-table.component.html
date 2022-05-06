@@ -1,5 +1,4 @@
-<ng-container *ngIf="listName">
-
+<ng-container *ngIf="listName || dataSource || !state$.value.error">
   <div class="d-flex justify-content-between mb-4 mt-5">
     <h3 class="mb-0 align-bottom">{{listName}} </h3>
     <button mat-raised-button color="primary" (click)="onShowAddBookHandler($event)">
@@ -84,21 +83,20 @@
         </mat-card>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <button mat-raised-button color="warn" (click)="onDeleteListHandler()">Delete list</button>
-      </div>
-    </div>
   </ng-container>
   <ng-container *ngIf="dataSource && dataSource.data.length === 0 &&  !state$.value.error ">
     <div class="d-flex justify-content-center py-4">
       <p class=" text-muted">There are no books </p>
     </div>
   </ng-container>
-  <ng-container *ngIf="!dataSource || state$.value.error ">
-    <div class="d-flex justify-content-center py-4">
-      <p class=" text-muted">Error occurred, please try later </p>
+  <div class="row">
+    <div class="col-sm-12">
+      <button mat-raised-button color="warn" (click)="onDeleteListHandler()">Delete list</button>
     </div>
-  </ng-container>
-
+  </div>
+</ng-container>
+<ng-container *ngIf="!dataSource || state$.value.error ">
+  <div class="d-flex justify-content-center py-4">
+    <p class=" text-muted">Error occurred, please try later </p>
+  </div>
 </ng-container>

@@ -50,3 +50,8 @@ $warn-palette: map.get($color-config, "warn");
 .fs-sm {
   font-size: 0.75rem !important;
 }
+// scrollblock start -600 top so the main page shrink height!
+.cdk-global-scrollblock {
+  position: static;
+  overflow: hidden !important;
+}

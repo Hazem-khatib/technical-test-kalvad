@@ -3,9 +3,11 @@ import { LocalStorageService } from './../../../shared/services/local-storage.se
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,6 +33,7 @@ interface BooksListState {
 })
 export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
   @Input() listName?: string;
+  @Output() openNewBookEvent = new EventEmitter<boolean>();
   @ViewChild('table') table?: MatTable<Partial<Book>>;
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -219,5 +222,7 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
       this.pageSizeOptions = [...this.pageSizeOptions, this.booksLength];
     }
   }
-  onShowAddBookHandler(e: any) {}
+  onShowAddBookHandler(e: any) {
+    this.openNewBookEvent.emit(true);
+  }
 }

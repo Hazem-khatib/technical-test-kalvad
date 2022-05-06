@@ -45,7 +45,6 @@ export class FavoriteBookTableBuilderComponent {
     });
   }
   onCancelHandler(e: any) {
-    e.preventDefault();
     this.onCloseBuilderHandler(true);
   }
   validateBookName(): { [key: string]: any } | null {

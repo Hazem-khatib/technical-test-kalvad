@@ -1,17 +1,37 @@
   <div class="container py-5">
     <h1 class="text-center mb-4 text-primary">Favorite books</h1>
-    <!-- <ng-container *ngIf="state$.value.showLists">
-      <div class="d-flex justify-content-end mb-4"> <button mat-raised-button color="accent"
-          (click)="onNewListHandler(true)">
-          <mat-icon>add</mat-icon>
-          New List
-        </button></div>
-
-      <app-favorite-books-table *ngFor="let list of storageLists$.value | keyvalue" [listName]="list.key">
-      </app-favorite-books-table>
-
-    </ng-container> -->
-
+    <ng-container *ngIf="!state$.value.error">
+      <ng-container *ngIf="state$.value.showLists">
+        <div class="d-flex justify-content-end mb-4"> <button mat-raised-button color="accent"
+            (click)="onNewListHandler(true)">
+            <mat-icon>add</mat-icon>
+            New List
+          </button></div>
+        <ng-container *ngIf="storageLists$.value && (storageLists$.value | json) !=='{}'">
+          <app-favorite-books-table *ngFor="let list of storageLists$.value | keyvalue;" [listName]="list.key"
+            (openNewBookEvent)="onOpenNewBookHandler($event,list.key)">
+          </app-favorite-books-table>
+        </ng-container>
+        <ng-container *ngIf="!storageLists$.value || (storageLists$.value | json) ==='{}'">
+          <div class="d-flex justify-content-center py-4">
+            <p class=" text-muted">There are no Lists </p>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="state$.value.showNewList">
+        <app-favorite-book-table-builder (closeListBuilderEvent)="closeListBuilder($event)">
+        </app-favorite-book-table-builder>
+      </ng-container>
+      <ng-container *ngIf="state$.value.showNewBook && state$.value.listName  ">
+        <app-new-favorite-book [listName]="state$.value.listName" (hideNewBookEvent)="onCloseNewBookHandler($event)">
+        </app-new-favorite-book>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="state$.value.error ">
+      <div class="d-flex justify-content-center py-4">
+        <p class=" text-muted">Error occurred, please try later </p>
+      </div>
+    </ng-container>
     <!-- <ng-container *ngIf="!showNewBookForm;else newFavoriteBook">
       <div class="d-flex justify-content-end mb-4"> <button mat-raised-button color="primary"
           (click)="onShowAddFormHandler(true)">
@@ -24,7 +44,5 @@
       <app-new-favorite-book (hideFormEvent)="onShowAddFormHandler($event)"></app-new-favorite-book>
     </ng-template>
     <app-favorite-book-table-builder></app-favorite-book-table-builder> -->
-    <app-favorite-books-table [listName]="'list one'"></app-favorite-books-table>
-    <app-favorite-books-table [listName]="'list one'"></app-favorite-books-table>
-    <app-favorite-books-table [listName]="'list two'"></app-favorite-books-table>
+
   </div>
