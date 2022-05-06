@@ -215,6 +215,7 @@ export class FavoriteBooksTableComponent implements OnInit, OnDestroy {
           ...this.state$.value,
           deleting: false,
         });
+        this.deletedListEvent.emit(true);
       }
     });
   }
